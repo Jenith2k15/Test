@@ -1,0 +1,14 @@
+name: Copy to Dev Server
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+jobs:
+  copy:
+  
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v2
