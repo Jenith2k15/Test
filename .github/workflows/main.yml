@@ -1,4 +1,4 @@
-name: Copy to Dev Server
+name: CD
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
     
 jobs:
-  copy:
+  .NET-app:
   
     runs-on: self-hosted
     steps:
@@ -27,4 +27,28 @@ jobs:
       working-directory: ./Test.Services
       run: dotnet test --no-build --verbosity normal
 
-   
+  Angular-app:
+
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [16.15.0]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        working-directory: ./Dashboard.UI
+        node-version: ${{ matrix.node-version }}
+    - name: Set SSL false
+      working-directory: ./Dashboard.UI
+      run: npm set strict-ssl false
+    - name: Install dependencies
+      working-directory: ./Dashboard.UI
+      run: npm ci
+    - name: Build
+      working-directory: ./Dashboard.UI
+      run: npm run build 
