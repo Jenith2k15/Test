@@ -12,3 +12,17 @@ jobs:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        working-directory: ./Test.Services
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      working-directory: ./Test.Services
+      run: dotnet restore
+    - name: Build
+      working-directory: ./Test.Services
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      working-directory: ./Test.Services
+      run: dotnet test --no-build --verbosity normal
