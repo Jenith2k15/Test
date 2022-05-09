@@ -7,7 +7,7 @@ on:
     branches: [ master ]
     
 jobs:
-  .net-app:
+  dotnetapp:
   
     runs-on: self-hosted
     steps:
