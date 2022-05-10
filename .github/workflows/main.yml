@@ -26,6 +26,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        lfs: true
+        ssh-key: ${{git@github.com:Jenith2k15/Test.git}}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
