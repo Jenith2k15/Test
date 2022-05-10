@@ -1,28 +1,40 @@
-name: CD
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Test & Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
-    
+    branches: [ main ]
+
 jobs:
-  dotnetapp:
-  
+  angularappbuild:
+
     runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [16.15.0]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
       with:
-        working-directory: ./Test.Services
-        dotnet-version: 3.1.301
+        node-version: ${{ matrix.node-version }}
+    - name: Set SSL false
+      working-directory: ./Dashboard.UI
+      run: npm set strict-ssl false
+    
     - name: Install dependencies
-      working-directory: ./Test.Services
-      run: dotnet restore
+      working-directory: ./Dashboard.UI
+      run: npm ci
+    
     - name: Build
-      working-directory: ./Test.Services
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      working-directory: ./Test.Services
-      run: dotnet test --no-build --verbosity normal
+      working-directory: ./Dashboard.UI
+      run: npm run build
+    
+    
